@@ -60,11 +60,7 @@ export default function MilitaryEducationPage() {
                   Military Education is an essential component of the educational curriculum in many countries,
                   aimed at instilling discipline, patriotism, and a sense of duty among students.
                 </p>
-                <p className="text-lg text-gray-700">
-                  Through a combination of theoretical lessons and practical training, students develop leadership skills,
-                  teamwork abilities, and a sense of civic responsibility. This program plays a crucial role in preparing
-                  young individuals for national service and fostering a spirit of national unity.
-                </p>
+                
               </motion.div>
 
               {/* Button Replacement */}

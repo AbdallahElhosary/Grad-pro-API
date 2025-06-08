@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Moon, Sun } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleDarkMode } from '../redux/actions/settingsAction';
 
 const languages = [
     { value: 'en', label: 'English' },
@@ -11,16 +13,13 @@ const languages = [
 ];
 
 export default function SettingsPage() {
-    const [darkMode, setDarkMode] = useState(false);
     const [language, setLanguage] = useState('en');
+    const dispatch = useDispatch();
+    const darkMode = useSelector(state => state.settings?.darkMode) || false;
 
-    useEffect(() => {
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, [darkMode]);
+    const handleDarkModeToggle = () => {
+        dispatch(toggleDarkMode());
+    };
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -60,7 +59,7 @@ export default function SettingsPage() {
                                     <p className="text-sm text-gray-500">Toggle dark mode on or off</p>
                                 </div>
                                 <button
-                                    onClick={() => setDarkMode(!darkMode)}
+                                    onClick={handleDarkModeToggle}
                                     className="p-2 rounded-lg border border-gray-300 bg-gray-200 dark:bg-gray-600"
                                 >
                                     {darkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-gray-600" />}

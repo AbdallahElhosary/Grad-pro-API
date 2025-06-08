@@ -56,12 +56,35 @@ export default function EnrollSubjects() {
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-100 text-dark">
-                <MainTitle title="Subject Selection" />
+            <MainTitle title="Subject Selection" />
             <main className="flex-grow container mx-auto px-4 py-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="mt-8">
                     <Card>
                         <Card.Body>
                             <Card.Title>Available Subjects</Card.Title>
+                            <Card.Text>Based on your current selection</Card.Text>
+                            {recommendedSubjects.length > 0 ? (
+                                <ul className="list-group">
+                                    {recommendedSubjects.map((subject) => (
+                                        <li key={subject.id} className="list-group-item d-flex justify-content-between">
+                                            <span>{subject.code} - {subject.name} ({subject.hours} hours)</span>
+                                            <Button className='hover:bg-blue-500 d-flex justify-center items-center' size="sm" onClick={() => addSubject(subject.id)}>
+                                                <PlusCircle className="h-4 w-4 me-2" /> Add
+                                            </Button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No recommendations available based on your current selection.</p>
+                            )}
+                        </Card.Body>
+                    </Card>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Recommended Subjects</Card.Title>
                             <Card.Text>Select subjects for your semester (Max 18 hours)</Card.Text>
                             <Form.Select onChange={(e) => addSubject(e.target.value)}>
                                 <option>Select a subject</option>
@@ -93,29 +116,6 @@ export default function EnrollSubjects() {
                                     </li>
                                 ))}
                             </ul>
-                        </Card.Body>
-                    </Card>
-                </div>
-
-                <div className="mt-8">
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Recommended Subjects</Card.Title>
-                            <Card.Text>Based on your current selection</Card.Text>
-                            {recommendedSubjects.length > 0 ? (
-                                <ul className="list-group">
-                                    {recommendedSubjects.map((subject) => (
-                                        <li key={subject.id} className="list-group-item d-flex justify-content-between">
-                                            <span>{subject.code} - {subject.name} ({subject.hours} hours)</span>
-                                            <Button  className='hover:bg-blue-500 d-flex justify-center items-center' size="sm" onClick={() => addSubject(subject.id)}>
-                                                <PlusCircle className="h-4 w-4 me-2" /> Add
-                                            </Button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>No recommendations available based on your current selection.</p>
-                            )}
                         </Card.Body>
                     </Card>
                 </div>

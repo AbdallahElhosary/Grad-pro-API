@@ -1,4 +1,4 @@
-import { GET_ALL_MATRIAL, ADD_MATRIAL, DELETE_MATRIAL } from '../type'
+import { GET_ALL_MATRIAL, ADD_MATRIAL, DELETE_MATRIAL, GET_ALL_MATRIAL_PAGENAT } from '../type'
 
 const inital = {
     getAllMatrial: [],
@@ -9,6 +9,11 @@ const matrialReducer = (state = inital, action) => {
             return {
                 ...state,
                 getAllMatrial: action.payload,
+            }
+        case GET_ALL_MATRIAL_PAGENAT:
+            return {
+                ...state,
+                getAllMatrialPagentaion: action.payload,
             }
         case ADD_MATRIAL:
             return {

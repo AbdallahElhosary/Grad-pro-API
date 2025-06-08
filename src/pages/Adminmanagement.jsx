@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Trash2, Pencil,AlertCircle, UserPlus } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { UserPlus } from 'lucide-react'
 import MainTitle from '../components/MainTitle'
+import { ToastContainer } from 'react-toastify'
+import AddAdminHook from '../hook/admin/add-admin-hook'
 
 // Custom Components
 const CustomCard = ({ children, className }) => (
@@ -53,9 +54,9 @@ const CustomButton = ({ children, onClick, className, variant = 'default' }) => 
   )
 }
 
-const CustomInput = ({ value, onChange, placeholder, className }) => (
+const CustomInput = ({ value, onChange, placeholder, className ,type }) => (
   <input
-    type="text"
+    type={type}
     value={value}
     onChange={onChange}
     placeholder={placeholder}
@@ -69,106 +70,26 @@ const CustomLabel = ({ children, htmlFor }) => (
   </label>
 )
 
-const CustomAlert = ({ children, variant = 'default' }) => {
-  const variantStyles = {
-    default: 'bg-blue-50 text-blue-700',
-    destructive: 'bg-red-50 text-red-700',
-  }
-  return (
-    <div className={`p-4 rounded-md ${variantStyles[variant]}`}>
-      {children}
-    </div>
-  )
-}
-
-const CustomAlertTitle = ({ children }) => (
-  <h3 className="font-medium">
-    {children}
-  </h3>
-)
-
-const CustomAlertDescription = ({ children }) => (
-  <p className="text-sm">
-    {children}
-  </p>
-)
-
-const CustomDialog = ({ open, onOpenChange, children }) => (
-  open && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
-        {children}
-      </div>
-    </div>
-  )
-)
-
-const CustomDialogHeader = ({ children }) => (
-  <div className="p-6 border-b border-gray-200">
-    {children}
-  </div>
-)
-
-const CustomDialogTitle = ({ children }) => (
-  <h3 className="text-xl font-semibold text-gray-800">
-    {children}
-  </h3>
-)
-
-const CustomDialogDescription = ({ children }) => (
-  <p className="text-sm text-gray-500">
-    {children}
-  </p>
-)
-
-const CustomDialogContent = ({ children }) => (
-  <div className="p-6">
-    {children}
-  </div>
-)
-
-const CustomDialogTrigger = ({ children, className }) => (
-  <div className={`cursor-pointer ${className}`}>
-    {children}
-  </div>
-);
-
-const CustomDialogFooter = ({ children }) => (
-  <div className="p-6 border-t border-gray-200 flex justify-end space-x-2">
-    {children}
-  </div>
-)
-
 export default function AdminManagementPage() {
-  const [admins, setAdmins] = useState([
-    { id: '1', name: 'John Doe', email: 'john@example.com' },
-    { id: '2', name: 'Jane Smith', email: 'jane@example.com' },
-  ])
-  const [newAdmin, setNewAdmin] = useState({ name: '', email: '' })
-  const [error, setError] = useState(null)
-  const [adminToDelete, setAdminToDelete] = useState(null)
+  
 
-  const addAdmin = (e) => {
-    e.preventDefault()
-    if (newAdmin.name && newAdmin.email) {
-      if (admins.some(admin => admin.email === newAdmin.email)) {
-        setError('An admin with this email already exists.')
-        return
-      }
-      setAdmins([...admins, { ...newAdmin, id: Date.now().toString() }])
-      setNewAdmin({ name: '', email: '' })
-      setError(null)
-    } else {
-      setError('Please fill in both name and email fields.')
-    }
-  }
+  const [
+    name,
+    email,
+    password,
+    confirmPassword,
+    code,
+    onChangeName,
+    onChangeEmail,
+    onChangePassword,
+    onChangeConfirmPassword,
+    onChangeCode,
+    onAddAdmin
+  ] = AddAdminHook()
 
-  const deleteAdmin = () => {
-    if (adminToDelete) {
-      setAdmins(admins.filter(admin => admin.id !== adminToDelete.id))
-      setAdminToDelete(null)
-    }
-  }
+  
+
+ 
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -195,14 +116,14 @@ export default function AdminManagementPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
-      <MainTitle title="Admins Management" /> 
+      <MainTitle title="Admins Management" />
       <main className="flex-grow container mx-auto px-4 py-6 max-w-2xl">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          
+
           <motion.div variants={itemVariants}>
             <CustomCard className="mb-8">
               <CustomCardHeader>
@@ -210,13 +131,13 @@ export default function AdminManagementPage() {
                 <CustomCardDescription>Enter the details of the new admin</CustomCardDescription>
               </CustomCardHeader>
               <CustomCardContent>
-                <form onSubmit={addAdmin} className="space-y-4">
+                <form onSubmit={onAddAdmin} className="space-y-4">
                   <div className="space-y-2">
                     <CustomLabel htmlFor="admin-name">Name</CustomLabel>
                     <CustomInput
                       id="admin-name"
-                      value={newAdmin.name}
-                      onChange={(e) => setNewAdmin({ ...newAdmin, name: e.target.value })}
+                      value={name}
+                      onChange={onChangeName}
                       placeholder="Enter admin name"
                     />
                   </div>
@@ -225,94 +146,57 @@ export default function AdminManagementPage() {
                     <CustomInput
                       id="admin-email"
                       type="email"
-                      value={newAdmin.email}
-                      onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })}
+                      value={email}
+                      onChange={onChangeEmail}
                       placeholder="Enter admin email"
                     />
                   </div>
-                  <CustomButton type="submit" className="flex justify-center items-center w-full">
+                  <div className="space-y-2">
+                    <CustomLabel htmlFor="admin-password">Password</CustomLabel>
+                    <CustomInput
+                      id="admin-password"
+                      type="password"
+                      value={password}
+                      onChange={onChangePassword}
+                      placeholder="Enter password"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <CustomLabel htmlFor="admin-confirm-password">Confirm Password</CustomLabel>
+                    <CustomInput
+                      id="admin-confirm-password"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={  onChangeConfirmPassword} 
+                      placeholder="Confirm password"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <CustomLabel htmlFor="admin-code">Admin Code</CustomLabel>
+                    <CustomInput
+                      id="admin-code"
+                      type="text"
+                      value={code}
+                      onChange={onChangeCode}
+                      placeholder="Enter admin code"
+                    />
+                  </div>
+                  {/* <CustomButton type="submit" className="flex justify-center items-center w-full">
+                    Add Admin
+                  </CustomButton> */}
+                  <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
                     <UserPlus className="mr-2 h-4 w-4" />
                     Add Admin
-                  </CustomButton>
+                  </button>
                 </form>
-                {error && (
-                  <CustomAlert variant="destructive" className="mt-4">
-                    <AlertCircle className="h-4 w-4" />
-                    <CustomAlertTitle>Error</CustomAlertTitle>
-                    <CustomAlertDescription>{error}</CustomAlertDescription>
-                  </CustomAlert>
-                )}
+                
               </CustomCardContent>
             </CustomCard>
           </motion.div>
-          <motion.div variants={itemVariants}>
-            <CustomCard>
-              <CustomCardHeader>
-                <CustomCardTitle>Existing Admins</CustomCardTitle>
-                <CustomCardDescription>Manage your current admin users</CustomCardDescription>
-              </CustomCardHeader>
-              <CustomCardContent>
-                <AnimatePresence>
-                  {admins.map((admin) => (
-                    <motion.div
-                      key={admin.id}
-                      className="flex justify-between items-center p-4 bg-white rounded-lg shadow mb-4 hover:shadow-md transition-shadow duration-200"
-                      variants={itemVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                    >
-                      <div>
-                        <h3 className="font-medium text-gray-800">{admin.name}</h3>
-                        <p className="text-sm text-gray-500">{admin.email}</p>
-                      </div>
-                      <div className="space-x-2 flex">
-                        <CustomButton
-                          variant="outline"
-                          // onClick={() => setEditingCourse(course)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </CustomButton>
-                        <CustomButton
-                          variant="destructive"
-                          // onClick={() => setDeletingCourse(course)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </CustomButton>
-                      </div>
-                      <CustomDialog open={!!adminToDelete} onOpenChange={() => setAdminToDelete(null)}>
-                        <CustomDialogTrigger>
-                          <CustomButton
-                            variant="destructive"
-                            onClick={() => setAdminToDelete(admin)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </CustomButton>
-                        </CustomDialogTrigger>
-                        <CustomDialogContent>
-                          <CustomDialogHeader>
-                            <CustomDialogTitle>Confirm Deletion</CustomDialogTitle>
-                            <CustomDialogDescription>
-                              Are you sure you want to delete the admin {admin.name}?
-                            </CustomDialogDescription>
-                          </CustomDialogHeader>
-                          <CustomDialogFooter>
-                            <CustomButton variant="outline" onClick={() => setAdminToDelete(null)}>Cancel</CustomButton>
-                            <CustomButton variant="destructive" onClick={deleteAdmin}>Delete</CustomButton>
-                          </CustomDialogFooter>
-                        </CustomDialogContent>
-                      </CustomDialog>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-                {admins.length === 0 && (
-                  <p className="text-center text-gray-500">No admins found. Add some above!</p>
-                )}
-              </CustomCardContent>
-            </CustomCard>
-          </motion.div>
+          
         </motion.div>
       </main>
+      <ToastContainer />
     </div>
   )
 }

@@ -2,26 +2,86 @@
 @tailwind utilities;
 @tailwind base;
 
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --background-light: #f3f4f6;
+  --background-dark: #1e293b;
+  --text-light: #1e293b;
+  --text-dark: #f3f4f6;
+}
 
-/* Main Title Style  */
+/* Dark mode styles */
+.dark {
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+}
+
+/* Main Title Style */
+.main-title {
+  font-size: 1.875rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  color: var(--text-light);
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.dark .main-title {
+  color: var(--text-dark);
+}
+
 .main-title::before,
-.main-title::after{
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    height: 3px;
+.main-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
 }
 
-.main-title::before{
-    background-color: black;
-    width: 30%;
-    z-index: 1;
+.main-title::before {
+  background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+  width: 60px;
+  z-index: 1;
 }
 
-.main-title::after{
-    width: 80%;
-    background-color: white;
-
+.main-title::after {
+  width: 140px;
+  background-color: #e2e8f0;
 }
-/* End Main Title */
+
+.dark .main-title::after {
+  background-color: #475569;
+}
+
+/* Global dark mode overrides */
+.dark .bg-white {
+  background-color: #1e293b !important;
+  color: var(--text-dark) !important;
+}
+
+.dark .bg-gray-100,
+.dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-700,
+.dark .text-gray-800,
+.dark .text-gray-900 {
+  color: #e2e8f0 !important;
+}
+
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: #334155 !important;
+}
+
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-sm {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+}

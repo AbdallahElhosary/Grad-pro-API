@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AuthPage from "./components/AuthPage";
 import {  Routes, Route } from "react-router";
 import HomePage from "./components/Home";
@@ -21,6 +21,7 @@ import StudentProfile from "./pages/StudentProfile.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import HeaderTitle from "./components/HeaderTitle.jsx";
 import DeleteMaterial from "./pages/DeleteMatrial.jsx";
+import { useSelector } from 'react-redux';
 
 
 
@@ -28,10 +29,16 @@ import DeleteMaterial from "./pages/DeleteMatrial.jsx";
 
 
 export default function App() {
+  const darkMode = useSelector(state => state.settings?.darkMode) || false;
 
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
-
-  
   return (
     <div className="App font-sans flex min-h-screen bg-slate-50 dark:bg-slate-900">
       

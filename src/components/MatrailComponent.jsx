@@ -2,44 +2,11 @@ import React, { useState } from 'react'
 
 import { motion } from 'framer-motion'
 import { Book, User, Youtube, FileText } from 'lucide-react'
-const courses = [
-    {
-        id: 1,
-        name: "Introduction to React",
-        description: "Learn the basics of React and build your first app",
-        instructor: "Dr. Jane Smith",
-        youtubeLink: 'https://www.youtube.com/watch?v=dummylink1',
-        driveLink: 'https://drive.google.com/file/d/dummylink1'
-    },
-    {
-        id: 2,
-        name: "Advanced JavaScript",
-        description: "Deep dive into JavaScript's advanced concepts",
-        instructor: "Prof. John Doe",
-        youtubeLink: 'https://www.youtube.com/watch?v=dummylink2',
-        driveLink: 'https://drive.google.com/file/d/dummylink2'
-    },
-    {
-        id: 3,
-        name: "Web Design Fundamentals",
-        description: "Master the principles of effective web design",
-        instructor: "Ms. Emily Brown",
-        youtubeLink: 'https://www.youtube.com/watch?v=dummylink3',
-        driveLink: 'https://drive.google.com/file/d/dummylink3'
-    },
-    {
-        id: 4,
-        name: "Web Design Fundamentals",
-        description: "Master the principles of effective web design",
-        instructor: "Ms. Emily Brown",
-        youtubeLink: 'https://www.youtube.com/watch?v=dummylink3',
-        driveLink: 'https://drive.google.com/file/d/dummylink3'
-    },
-]
 
 
 
-const MatrailComponent = ({ id, name, description, instructor ,youtube,drive }) => {
+
+const MatrailComponent = ({ id, name, description, instructor, youtube, drive }) => {
 
     const [hoveredCourse, setHoveredCourse] = useState(null)
 
@@ -65,51 +32,52 @@ const MatrailComponent = ({ id, name, description, instructor ,youtube,drive }) 
         hidden: { opacity: 0, y: 10 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
     }
-  return (
-      
-              <motion.div
-                  key={id}
-                  variants={cardVariants}
-                  whileHover="hover"
-              >
-                  <div
-              className="h-full flex flex-col justify-between bg-white rounded-lg shadow-md p-4"
-                      onMouseEnter={() => setHoveredCourse(id)}
-                      onMouseLeave={() => setHoveredCourse(null)}
-                  >
-                      <div>
-                          <h3 className="flex items-center text-lg font-semibold">
-                              <Book className="w-5 h-5 mr-2" />
-                              {name}
-                          </h3>
-                          <p className="text-gray-600 text-sm">{description}</p>
-                      </div>
-                      <motion.div
-                          variants={instructorVariants}
-                          initial="hidden"
-                          animate={hoveredCourse === id ? "visible" : "hidden"}
-                          className="flex items-center text-sm text-gray-500 mt-2"
-                      >
-                          <User className="w-4 h-4 mr-1" />
-                          {instructor}
-                      </motion.div>
-                      <div className="flex flex-col sm:flex-row gap-2 mt-4">
-                          <a href={youtube} target="_blank" rel="noopener noreferrer" className="w-full sm:w-1/2 no-underline">
-                              <button className="w-full flex items-center justify-center border p-2 rounded-lg text-blue-600 hover:bg-blue-600 hover:text-white">
-                                  <Youtube className="w-4 h-4 mr-2" />
-                                  YouTube
-                              </button>
-                          </a>
-                          <a href={drive} target="_blank" rel="noopener noreferrer" className="w-full sm:w-1/2 no-underline">
-                              <button className="w-full flex items-center justify-center border p-2 rounded-lg text-green-600 hover:bg-green-600 hover:text-white">
-                                  <FileText className="w-4 h-4 mr-2" />
-                                  Drive
-                              </button>
-                          </a>
-                      </div>
-                  </div>
-              </motion.div>
-  )
+    return (
+
+        <motion.div
+            key={id}
+            variants={cardVariants}
+            whileHover="hover"
+            className="transform transition-all duration-300 hover:translate-y-[-4px]"
+        >
+            <div
+                className="h-full flex flex-col justify-between bg-white rounded-xl shadow-lg p-6 border border-gray-100"
+                onMouseEnter={() => setHoveredCourse(id)}
+                onMouseLeave={() => setHoveredCourse(null)}
+            >
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="flex items-center text-xl font-bold text-gray-800">
+                            <Book className="w-6 h-6 mr-3 text-blue-500" />
+                            {name}
+                        </h3>
+                    </div>
+                    <p className="text-gray-600 text-base leading-relaxed">{description}</p>
+                    <motion.div
+                        variants={instructorVariants}
+                        className="flex items-center text-sm text-gray-500 bg-gray-50 p-3 rounded-lg"
+                    >
+                        <User className="w-5 h-5 mr-2 text-gray-400" />
+                        <span className="font-medium">{instructor}</span>
+                    </motion.div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                    <a href={youtube && youtube} aria-disabled ={!youtube} target="_blank" rel="noopener noreferrer" className="w-full sm:w-1/2 no-underline">
+                        <button className="w-full flex items-center justify-center px-4 py-2.5 rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors duration-200 shadow-sm">
+                            <Youtube className="w-5 h-5 mr-2" />
+                            YouTube
+                        </button>
+                    </a>
+                    <a href={drive} target="_blank" rel="noopener noreferrer" className="w-full sm:w-1/2 no-underline">
+                        <button className="w-full flex items-center justify-center px-4 py-2.5 rounded-lg text-white bg-green-500 hover:bg-green-600 transition-colors duration-200 shadow-sm">
+                            <FileText className="w-5 h-5 mr-2" />
+                            Drive
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </motion.div>
+    )
 }
 
 export default MatrailComponent

@@ -1,77 +1,33 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, Button, Form, FormControl, FormCheck, FormLabel, FormSelect } from 'react-bootstrap';
 import { X } from 'lucide-react';
 import MainTitle from '../components/MainTitle';
+import AllDepartmentsPageHook from '../hook/department/get-all-departments';
+import AddCourseHook from '../hook/course/add-new-course';
+import { ToastContainer } from 'react-toastify';
 
-const prerequisites = [
-  { id: '1', code: 'CS101', name: 'Introduction to Programming' },
-  { id: '2', code: 'CS201', name: 'Data Structures' },
-  { id: '3', code: 'CS301', name: 'Algorithms' },
-  { id: '4', code: 'MATH101', name: 'Calculus I' },
-];
-
-const departments = [
-  { id: '1', name: 'Computer Science' },
-  { id: '2', name: 'Information Technology' },
-  { id: '3', name: 'Software Engineering' },
-];
 
 export default function AddCourseForm() {
-  const [courseName, setCourseName] = useState('');
-  const [courseCode, setCourseCode] = useState('');
-  const [courseHours, setCourseHours] = useState('');
-  const [selectedSemesters, setSelectedSemesters] = useState([]);
-  const [selectedPrerequisites, setSelectedPrerequisites] = useState([]);
-  const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [isImportant, setIsImportant] = useState(false);
-  const [error, setError] = useState('');
 
-  const toggleSemester = (semester) => {
-    setSelectedSemesters(prev =>
-      prev.includes(semester)
-        ? prev.filter(s => s !== semester)
-        : [...prev, semester]
-    );
-  };
+  const [courseName, onChangeName, courseCode, onChangeCode, coursePreRequest, onChangePreRequest
+    , courseHours, onChangeHours
+    , courseSemesters, onChangeSemesters
+    , courseDepartments, onChangeDepartments
+    , mandatoryCourse, onChangeMandatoryCourse, onAddCourse] = AddCourseHook()
+  
+  
 
-  const togglePrerequisite = (id) => {
-    setSelectedPrerequisites(prev =>
-      prev.includes(id)
-        ? prev.filter(p => p !== id)
-        : [...prev, id]
-    );
-  };
+  const [departments] = AllDepartmentsPageHook();
 
-  const toggleDepartment = (id) => {
-    setSelectedDepartments(prev =>
-      prev.includes(id)
-        ? prev.filter(d => d !== id)
-        : [...prev, id]
-    );
-  };
+  console.log('====================================');
+  console.log(departments);
+  console.log('====================================');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    // Validate hours input
-    const hours = parseInt(courseHours);
-    if (isNaN(hours) || hours <= 0) {
-      setError('Please enter a valid number of hours');
-      return;
-    }
 
-    console.log({
-      courseName,
-      courseCode,
-      courseHours: hours,
-      selectedSemesters,
-      selectedPrerequisites,
-      selectedDepartments,
-      isImportant
-    });
-    setError('');
-  };
+
+  
+  
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
@@ -81,14 +37,14 @@ export default function AddCourseForm() {
           <Card.Title className="text-2xl">Add New Course</Card.Title>
         </Card.Header>
         <Card.Body>
-          <Form onSubmit={handleSubmit} className="space-y-6">
+          <Form onSubmit={onAddCourse} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <FormLabel>Course Name</FormLabel>
                 <FormControl
                   type="text"
                   value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
+                  onChange={onChangeName}
                   placeholder="Enter course name"
                   required
                 />
@@ -99,7 +55,7 @@ export default function AddCourseForm() {
                 <FormControl
                   type="text"
                   value={courseCode}
-                  onChange={(e) => setCourseCode(e.target.value)}
+                  onChange={onChangeCode}
                   placeholder="Enter course code"
                   required
                 />
@@ -110,14 +66,15 @@ export default function AddCourseForm() {
               <FormLabel>Number of Hours</FormLabel>
               <FormControl
                 type="number"
-                min="1"
+                min={1}
+                max={3}
                 value={courseHours}
-                onChange={(e) => setCourseHours(e.target.value)}
+                onChange={onChangeHours}
                 className="w-full md:w-1/4"
                 placeholder="Hours"
                 required
               />
-              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+              {/* {error && <p className="text-red-500 text-sm mt-1">{error}</p>} */}
             </div>
 
             <div className="space-y-2">
@@ -128,11 +85,9 @@ export default function AddCourseForm() {
                     key={semester}
                     type="button"
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => toggleSemester(semester)}
-                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${selectedSemesters.includes(semester)
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                      }`}
+                    onClick={onChangeSemesters}
+                    value={semester}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors has-checked:bg-indigo-50 `}
                   >
                     Semester {semester}
                   </motion.button>
@@ -143,18 +98,18 @@ export default function AddCourseForm() {
             <div className="space-y-2">
               <FormLabel>Prerequisites</FormLabel>
               <FormSelect
-                onChange={(e) => togglePrerequisite(e.target.value)}
+                onChange={onChangePreRequest}
               >
                 <option value="">Select prerequisites</option>
-                {prerequisites.map((course) => (
+                {coursePreRequest.map((course) => (
                   <option key={course.id} value={course.id}>
                     {course.code} - {course.name}
                   </option>
                 ))}
               </FormSelect>
               <div className="flex flex-wrap gap-2 mt-2">
-                {selectedPrerequisites.map((id) => {
-                  const course = prerequisites.find(c => c.id === id);
+                {coursePreRequest.map((id) => {
+                  const course = coursePreRequest.find(c => c.id === id);
                   return course ? (
                     <motion.div
                       key={id}
@@ -164,7 +119,7 @@ export default function AddCourseForm() {
                       {course.code}
                       <button
                         type="button"
-                        onClick={() => togglePrerequisite(id)}
+                        onClick={onChangePreRequest}
                         className="ml-2 focus:outline-none"
                       >
                         <X className="h-3 w-3" />
@@ -178,21 +133,20 @@ export default function AddCourseForm() {
             <div className="space-y-2">
               <FormLabel>Departments</FormLabel>
               <div className="flex flex-wrap gap-2">
-                {departments.map((dept) => (
+                {departments?.map((dept , index) => (
                   <motion.button
-                    key={dept.id}
+                    key={index}
                     type="button"
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => toggleDepartment(dept.id)}
-                    className={`inline-flex items-center px-3 py-1 rounded-md text-sm font-medium transition-colors ${selectedDepartments.includes(dept.id)
+                    onClick={onChangeDepartments}
+                    value={dept.nameOfDepartment}
+                    className={`inline-flex items-center px-3 py-1 rounded-md text-sm font-medium transition-colors ${courseDepartments.includes(dept.nameOfDepartment)
                         ? 'bg-blue-500 text-white'
                         : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
                       }`}
                   >
-                    {dept.name}
-                    {selectedDepartments.includes(dept.id) && (
-                      <X className="ml-2 h-3 w-3" />
-                    )}
+                      {dept.nameOfDepartment }
+
                   </motion.button>
                 ))}
               </div>
@@ -201,8 +155,8 @@ export default function AddCourseForm() {
             <div className="flex items-center space-x-2">
               <FormCheck
                 id="isImportant"
-                checked={isImportant}
-                onChange={(e) => setIsImportant(e.target.checked)}
+                checked={mandatoryCourse}
+                onChange={onChangeMandatoryCourse}
                 className="text-blue-500"
               />
               <FormLabel
@@ -222,6 +176,8 @@ export default function AddCourseForm() {
           </Form>
         </Card.Body>
       </Card>
+
+      <ToastContainer />
     </div>
   );
 }

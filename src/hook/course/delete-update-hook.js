@@ -1,40 +1,39 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteMatrial, updateMatrial } from "../../redux/actions/matrialAction";
 import notify from "../useNotify";
-import AllMatrialPageHook from "./all-matrial-data";
+import AllCoursesPageHook from "./all-courses-hoot";
 import { useNavigate } from "react-router";
+import { deleteCourse, updateCourse } from "../../redux/actions/courseAction";
 
-const DelteMatrialHook = ({ id }) => {
+const DeleteUpdateCourseHook = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const [loading, setLoading] = useState(true)
 
 
-    const [allMatrial] = AllMatrialPageHook();
-    
-   
-    
+    const [courses] = AllCoursesPageHook()
+
+
+
     // on delection function
 
     const onDelete = async (id) => {
         setLoading(true)
-        await dispatch(deleteMatrial(id))
+        await dispatch(deleteCourse(id))
         setLoading(false)
     }
 
-    const theUpdatedItem = allMatrial?.materials?.filter((item)=> item.id===id)
 
 
     const onUpdate = async () => {
         setLoading(true)
-        await dispatch(updateMatrial(theUpdatedItem))
+        await dispatch(updateCourse())
         setLoading(false)
     }
 
-    const res = useSelector(state => state.allMatrail.delteMatrial);
+    const res = useSelector(state => state.courses.deleteCourse);
 
     console.log(res)
 
@@ -42,10 +41,10 @@ const DelteMatrialHook = ({ id }) => {
     useEffect(() => {
         if (loading === false) {
             if (res.status === 204) {
-                notify("Matrial Deleted Successfully", "error")
-                setTimeout(() => {
-                    // window.location.reload(false)
-                }, 2000);
+                notify("Course Deleted Successfully", "error")
+                // setTimeout(() => {
+                //     window.location.reload(false)
+                // }, 2000);
             }
             else {
                 notify("Deletion Error", "error")
@@ -73,4 +72,4 @@ const DelteMatrialHook = ({ id }) => {
     return [onDelete, onUpdate]
 }
 
-export default DelteMatrialHook
+export default DeleteUpdateCourseHook
