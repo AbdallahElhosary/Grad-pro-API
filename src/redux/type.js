@@ -17,5 +17,11 @@ export const TOGGLE_DARK_MODE = "TOGGLE_DARK_MODE"
 export const GET_ALL_ADMINS = "GET_ALL_ADMINS"
 export const ADD_ADMIN = "ADD_ADMIN"
 export const DELETE_ADMIN = "DELETE_ADMIN"
+export const SEND_MESSAGE = "SEND_MESSAGE"
 // Error
 export const GET_ERROR = "GET_ERROR"
+// Auth
+
+export const LOGIN = "LOGIN"
+export const SIGN_UP = "SIGN_UP"
+export const LOGOUT = "LOGOUT"

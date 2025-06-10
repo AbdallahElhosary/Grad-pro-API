@@ -16,6 +16,7 @@ export const useInsertDataImage = async (url, params) => {
 export const useInsertData = async (url, params) => {
     const config = {
         headers: {
+            // 'Content-Type': 'application/problem+json; charset=utf-8',
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
     }

@@ -7,25 +7,25 @@ const AllMatrialPageHook = () => {
 
     const MatrialsPerPage = 5
 
-
+    
     // Get All Matrials with limit
     useEffect(() => {
         dispatch(getAllMatrial());
     }, [])
 
-    const allMatrial = useSelector(state => state.matrial.getAllMatrial);
+    const allMatrial = useSelector(state => state.allMatrail.getAllMatrial);
 
     // Get All Matrials with limit
     useEffect(() => {
         dispatch(getAllMatrialPagenation(1, MatrialsPerPage));
     }, [])
     // Select Category
-
-    const matrialPagentionAll = useSelector(state => state.matrial.getAllMatrialPagentaion);
-
+    
+    const matrialPagentionAll = useSelector(state => state.allMatrail.getAllMatrialPagentaion);
+    
     //name pageCount to get the page numbers 
     let pageCount = 0;
-
+    
     if (allMatrial.totalCount > MatrialsPerPage) {
         pageCount = Math.ceil(allMatrial.totalCount / MatrialsPerPage)
     }
@@ -41,9 +41,9 @@ const AllMatrialPageHook = () => {
 
 
     // Function to get the page
+    
 
-
-    return [allMatrial, matrialPagentionAll, pageCount, getPagePagenta]
+    return [allMatrial, matrialPagentionAll, pageCount , getPagePagenta]
 }
 
 export default AllMatrialPageHook

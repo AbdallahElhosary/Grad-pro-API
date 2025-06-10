@@ -4,6 +4,7 @@ import { useInsertData } from "../../hooks/useInsertData";
 import { ADD_MATRIAL, DELETE_MATRIAL, GET_ALL_MATRIAL, GET_ALL_MATRIAL_PAGENAT, GET_ERROR } from "../type";
 
 // Action to get all Matrial
+// Action to get all Matrial
 export const getAllMatrial = () => async (dispatch) => {
     try {
         const response = await useGetData(`/api/Material/GetAllMaterialsWithCount`);
@@ -30,7 +31,7 @@ export const getAllMatrialPagenation = (page, numPerPage) => async (dispatch) =>
         })
     } catch (e) {
         dispatch({
-            type: GET_ERROR,
+            type: GET_ALL_MATRIAL_PAGENAT,
             payload: "Erorr" + e
         })
     }
@@ -43,10 +44,11 @@ export const addMatrial = (data) => async (dispatch) => {
         dispatch({
             type: ADD_MATRIAL,
             payload: response,
+            loading: true
         })
     } catch (e) {
         dispatch({
-            type: GET_ERROR,
+            type: ADD_MATRIAL,
             payload: e.response
         })
     }
@@ -63,7 +65,7 @@ export const deleteMatrial = (id) => async (dispatch) => {
         })
     } catch (e) {
         dispatch({
-            type: GET_ERROR,
+            type: DELETE_MATRIAL,
             payload: e.response
         })
     }

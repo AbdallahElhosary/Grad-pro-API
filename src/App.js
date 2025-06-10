@@ -21,6 +21,7 @@ import StudentProfile from "./pages/StudentProfile.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import HeaderTitle from "./components/HeaderTitle.jsx";
 import DeleteMaterial from "./pages/DeleteMatrial.jsx";
+import SendMessages from "./pages/SendMessages.jsx";
 import { useSelector } from 'react-redux';
 
 
@@ -69,6 +70,7 @@ export default function App() {
               <Route path="/studentActivity" element={<StudentActivitiesPage />} />
               <Route path="/auth/forgetPassword" element={<ForgotPasswordPage />} />
               <Route path="/auth/resetPassword" element={<ResetPasswordPage />} />
+              <Route path="/sendMessages" element={<SendMessages />} />
             </Routes>
             
           </main>

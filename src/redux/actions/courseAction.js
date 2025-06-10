@@ -14,7 +14,7 @@ export const getAllCourses = () => async (dispatch) => {
         })
     } catch (e) {
         dispatch({
-            type: GET_ERROR,
+            type: GET_ALL_COURSES,
             payload: "Error" + e
         })
     }
@@ -47,7 +47,7 @@ export const addCourse = (data) => async (dispatch) => {
         })
     } catch (e) {
         dispatch({
-            type: GET_ERROR,
+            type: ADD_COURSE,
             payload: e.response
         })
     }

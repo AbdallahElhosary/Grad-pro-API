@@ -1,13 +1,27 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { EyeIcon, EyeOffIcon, GraduationCap } from 'lucide-react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import MainTitle from './MainTitle';
+import { ToastContainer } from "react-toastify";
+
+import  LoginSignUpHook from '../hook/auth/login-signup-hook';
 
 export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
+
+  const [
+    email,
+    onChangeEmail,
+    password,
+    onChangePassword,
+    onLogin
+  ] = LoginSignUpHook();
+
+  console.log(email)
 
   const fadeIn = {
     hidden: { opacity: 0, y: -20 },
@@ -73,7 +87,7 @@ export default function AuthPage() {
                   variants={fadeIn}
                 >
                   {activeTab === 'login' ? (
-                    <form>
+                    <form onSubmit={onLogin}>
                       <div className="space-y-4">
                         {/* Email Field */}
                         <div className="space-y-2">
@@ -83,6 +97,8 @@ export default function AuthPage() {
                           <input
                             id="email"
                             type="email"
+                            value={email}
+                            onChange={onChangeEmail}
                             placeholder="m@example.com"
                             required
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -97,6 +113,8 @@ export default function AuthPage() {
                           <div className="relative">
                             <input
                               id="password"
+                              value={password}
+                              onChange={onChangePassword}
                               type={showPassword ? 'text' : 'password'}
                               required
                               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -225,6 +243,7 @@ export default function AuthPage() {
           </div>
         </motion.div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

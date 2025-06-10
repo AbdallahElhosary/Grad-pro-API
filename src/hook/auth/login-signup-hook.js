@@ -5,57 +5,44 @@ import { useNavigate } from "react-router-dom";
 import notify from "../useNotify";
 import { addAdmin } from "../../redux/actions/adminAction";
 
-const AddMatrialsHook = () => {
+const LoginSignUpHook = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     // The States
-    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [code, setCode] = useState("");
     const [loading, setLoading] = useState(true);
 
 
     // Change handlers
-    const onChangeName = (e) => {
-        setName(e.target.value);
-    };
+
     const onChangeEmail = (e) => {
         setEmail(e.target.value);
     };
     const onChangePassword = (e) => {
         setPassword(e.target.value);
     };
-    const onChangeConfirmPassword = (e) => {
-        setConfirmPassword(e.target.value);
-    };
-    const onChangeCode = (e) => {
-        setCode(e.target.value);
-    };
 
 
 
-    const onAddAdmin = async (e) => {
+
+    const onLogin = async (e) => {
         e.preventDefault();
-        if (name === "" || email === "" || password === "" || confirmPassword === "" || code === "") {
+        if (email === "" || password === "") {
             notify("Please Fill The Form", "warn")
             return;
         }
         setLoading(true)
 
         await dispatch(addAdmin({
-            code: code,
-            name:name,
-            password: password,
-            confirmPassword: confirmPassword,
-            email: email
-          }))
+            "email": email,
+            "password": password
+        }))
         setLoading(false)
 
     }
 
-    const res = useSelector((state) => state.admins.addAdminAction);
+    const res = useSelector((state) => state.auth?.login);
 
     console.log(res)
 
@@ -66,10 +53,10 @@ const AddMatrialsHook = () => {
                 if (res.status === 200) {
                     notify("Admin Added Successfully", "success");
                     setTimeout(() => {
-                        window.location.reload();
+                        navigate('/matrial')
                     }, 1000)
                 } else {
-                    notify("There is an error , please try again 55", "error");
+                    notify("There is an error , please try again", "error");
                 }
             }
         }
@@ -77,19 +64,13 @@ const AddMatrialsHook = () => {
     }, [loading])
 
     return [
-        name,
         email,
-        password,
-        confirmPassword,
-        code,
-        onChangeName,
         onChangeEmail,
+        password,
         onChangePassword,
-        onChangeConfirmPassword,
-        onChangeCode,
-        onAddAdmin
+        onLogin
     ]
 
 }
 
-export default AddMatrialsHook
+export default LoginSignUpHook

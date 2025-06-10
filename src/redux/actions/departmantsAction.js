@@ -11,7 +11,7 @@ export const getAllDepartments = () => async (dispatch) => {
         })
     } catch (e) {
         dispatch({
-            type: GET_ERROR,
+            type: GET_ALL_DEPARTMENTS,
             payload: "Erorr" + e
         })
     }

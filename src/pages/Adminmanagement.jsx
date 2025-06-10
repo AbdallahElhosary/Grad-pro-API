@@ -181,13 +181,11 @@ export default function AdminManagementPage() {
                       placeholder="Enter admin code"
                     />
                   </div>
-                  {/* <CustomButton type="submit" className="flex justify-center items-center w-full">
-                    Add Admin
-                  </CustomButton> */}
-                  <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                  <CustomButton type="submit" className="flex justify-center items-center w-full">
                     <UserPlus className="mr-2 h-4 w-4" />
                     Add Admin
-                  </button>
+                  </CustomButton>
+                  
                 </form>
                 
               </CustomCardContent>

@@ -3,11 +3,13 @@ import matrialReducer from "./matrialReducer";
 import departmantsReducer from "./departmentsReducer";
 import courseReducer from "./courseReducer";
 import adminReducer from "./adminReducer";
+import authReducer from "./authReducer";
 
 export default combineReducers({
     allMatrail : matrialReducer,
     departments: departmantsReducer,
     courses: courseReducer,
-    admins: adminReducer
+    admins: adminReducer,
+    auth : authReducer
 
 })

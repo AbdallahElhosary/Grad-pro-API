@@ -11,6 +11,8 @@ export default function MatrialPage() {
     
     const [, matrialPagentionAll, pageCount, getPagePagenta] = AllMatrialPageHook();
 
+    console.log(matrialPagentionAll)
+
 
     
     const containerVariants = {

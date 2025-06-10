@@ -1,14 +1,14 @@
-import { GET_ALL_ADMINS, ADD_ADMIN, DELETE_ADMIN } from '../type'
+import { SEND_MESSAGE, ADD_ADMIN, DELETE_ADMIN } from '../type'
 
 const inital = {
-    getAllAdmin: [],
 }
 const adminReducer = (state = inital, action) => {
     switch (action.type) {
-        case GET_ALL_ADMINS:
+        case SEND_MESSAGE:
             return {
                 ...state,
-                getAllAdmin: action.payload,
+                sendMessage: action.payload,
+                loading:false
             }
 
         case ADD_ADMIN:

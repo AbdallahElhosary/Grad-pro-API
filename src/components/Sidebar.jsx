@@ -1,5 +1,5 @@
 import React from "react"
-import {  Home, Settings, User, Shield, TvMinimalPlay, Users, LogOut } from "lucide-react"
+import {  Home, Settings, User, Shield, TvMinimalPlay, Users, LogOut, MessageSquare } from "lucide-react"
 import { Newspaper } from 'lucide-react';
 export default function Sidebar() {
 
@@ -26,6 +26,7 @@ export default function Sidebar() {
                     <NavItem href="/matrial" icon={TvMinimalPlay} label="Matrail" />
                     <NavItem href="/requirements" icon={Newspaper} label="Reqirements" />
                 <NavItem href="/military" icon={Shield} label="Military" />
+                <NavItem href="/sendMessages" icon={MessageSquare} label="Send Messages" />
                 <NavItem href="/military" icon={LogOut} label="Log out" />
 
                 </div>
