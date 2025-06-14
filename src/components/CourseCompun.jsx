@@ -4,7 +4,6 @@ import { Search, Clock, Filter, SortAsc, SortDesc, CircleAlert } from "lucide-re
 import DeleteUpdateCourseHook from '../hook/course/delete-update-hook'
 const CourseCompun = ({ course }) => {
     
-    console.log(course)
 
     const [onDelete, onUpdate] = DeleteUpdateCourseHook()
   return (
@@ -18,11 +17,7 @@ const CourseCompun = ({ course }) => {
               </div>
           </td>
 
-          <td>
-              {course.departmentIds?.map((dept, index) => (
-                  <Badge key={index} bg="light" text="dark" className="me-1">{dept}</Badge>
-              ))}
-          </td>
+          
           <td>
               <div className="d-flex align-items-center">
                   <CircleAlert size={16} className="me-2 text-primary" />

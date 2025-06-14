@@ -1,35 +1,48 @@
 import { useState } from "react"
-import { Container, Row, Col, Form, InputGroup, Button, Pagination } from "react-bootstrap"
-import { Search,   Filter, SortAsc, SortDesc } from "lucide-react"
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  InputGroup,
+  Button,
+} from "react-bootstrap"
+import { Search, SortAsc, SortDesc } from "lucide-react"
 import AllCoursesPageHook from "../hook/course/all-courses-hoot"
 import CourseCompun from "../components/CourseCompun"
 import { ToastContainer } from "react-toastify"
-
+import Paginate from "../components/utils/Pagenation/Pagenation"
 
 const CourseManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [sortDirection, setSortDirection] = useState("asc")
   const [currentPage, setCurrentPage] = useState(1)
-  const coursesPerPage = 3
+  const coursesPerPage = 10
 
-  // const [departments] = AllDepartmentsPageHook()
-  const [courses] = AllCoursesPageHook()
+  // مثال ثابت للأقسام (يفضل لاحقًا تجيبهم من hook أو API)
+  const [departments] = useState([
+    { departmentCode: "AI", nameOfDepartment: "Artificial Intelligence" },
+    { departmentCode: "CS", nameOfDepartment: "Computer Science" },
+    { departmentCode: "HM", nameOfDepartment: "Humanities" },
+  ])
 
   const [selectedDepartment, setSelectedDepartment] = useState("All Departments")
 
-  // Filter courses based on search term and department
+  const [courses] = AllCoursesPageHook()
+
   const filteredCourses = courses?.filter((course) => {
     const matchesSearch =
       course.nameOfCourse?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.code?.toLowerCase().includes(searchTerm.toLowerCase())
+      course.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(course.hoursOfCourse)?.includes(searchTerm)
 
-    const matchesDepartment = selectedDepartment === "All Departments" ||
+    const matchesDepartment =
+      selectedDepartment === "All Departments" ||
       course.departmentIds?.includes(selectedDepartment)
 
     return matchesSearch && matchesDepartment
   }) || []
 
-  // Sort courses by name
   const sortedCourses = [...filteredCourses].sort((a, b) => {
     if (sortDirection === "asc") {
       return a.nameOfCourse.localeCompare(b.nameOfCourse)
@@ -38,7 +51,6 @@ const CourseManagementPage = () => {
     }
   })
 
-  // Pagination
   const indexOfLastCourse = currentPage * coursesPerPage
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage
   const currentCourses = sortedCourses.slice(indexOfFirstCourse, indexOfLastCourse)
@@ -54,7 +66,6 @@ const CourseManagementPage = () => {
 
   return (
     <Container className="py-5">
-      {/* Header Section */}
       <Row className="mb-5">
         <Col>
           <h1 className="display-4 mb-0">University Courses</h1>
@@ -62,22 +73,35 @@ const CourseManagementPage = () => {
         </Col>
       </Row>
 
-      {/* Search and Filter Section */}
-      <Row className="mb-4">
-        <Col md={6} className="mb-3 mb-md-0">
+      <Row className="mb-4 align-items-center">
+        <Col md={4} className="mb-3 mb-md-0">
           <InputGroup>
             <InputGroup.Text>
               <Search size={18} />
             </InputGroup.Text>
             <Form.Control
-              placeholder="Search by course name, code, or instructor"
+              placeholder="Search by name, code, or hours"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </InputGroup>
         </Col>
-        
-        <Col md={2}>
+
+        <Col md={4}>
+          <Form.Select
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+          >
+            <option value="All Departments">All Departments</option>
+            {departments.map((dep) => (
+              <option key={dep.departmentCode} value={dep.departmentCode}>
+                {dep.nameOfDepartment}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
+
+        <Col md={4}>
           <Button
             variant="outline-secondary"
             className="w-100 d-flex align-items-center justify-content-center"
@@ -96,8 +120,6 @@ const CourseManagementPage = () => {
         </Col>
       </Row>
 
-
-
       {/* Courses Table */}
       <div className="table-responsive">
         <table className="table table-hover align-middle">
@@ -107,18 +129,17 @@ const CourseManagementPage = () => {
               <th>Course Name</th>
               <th>Hours</th>
               <th>Departments</th>
-              <th>Type</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {currentCourses.length > 0 ? (
+            {currentCourses?.length > 0 ? (
               currentCourses.map((course) => (
-                <CourseCompun key={Math.random()} course={course} />
+                <CourseCompun key={course.code} course={course} departments={departments} />
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center py-4">
+                <td colSpan="6" className="text-center py-4">
                   <h4>No courses match your search criteria</h4>
                   <p className="mb-0">Try adjusting your search or filters</p>
                 </td>
@@ -128,33 +149,10 @@ const CourseManagementPage = () => {
         </table>
       </div>
 
-      {/* Pagination */}
-      {sortedCourses.length > coursesPerPage && (
-        <Row className="mt-4">
-          <Col className="d-flex justify-content-center">
-            <Pagination>
-              <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
-
-              {[...Array(totalPages)].map((_, index) => (
-                <Pagination.Item
-                  key={index + 1}
-                  active={index + 1 === currentPage}
-                  onClick={() => handlePageChange(index + 1)}
-                >
-                  {index + 1}
-                </Pagination.Item>
-              ))}
-
-              <Pagination.Next
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              />
-            </Pagination>
-          </Col>
-        </Row>
+      {totalPages > 1 && (
+        <Paginate pageCount={totalPages} onPress={handlePageChange} />
       )}
 
-      {/* Summary */}
       <Row className="mt-4">
         <Col>
           <p className="text-muted">

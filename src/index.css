@@ -85,3 +85,11 @@
 .dark .shadow-sm {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
 }
+
+
+/* CourseMAnager  Handle*/
+
+.table.table-hover{
+  min-width: 700px;
+  overflow-y: scroll;
+}

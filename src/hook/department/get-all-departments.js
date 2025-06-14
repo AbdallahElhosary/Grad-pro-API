@@ -11,7 +11,6 @@ const AllDepartmentsPageHook = () => {
     // Select departments
     const departments = useSelector(state => state.departments.getAllDepartments);
 
-    console.log(departments)
     // Select Loading
 
     // Function to get the page

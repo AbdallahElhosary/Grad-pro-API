@@ -1,7 +1,14 @@
 import React from "react"
-import {  Home, Settings, User, Shield, TvMinimalPlay, Users, LogOut, MessageSquare } from "lucide-react"
+import { Home, Settings, User, Shield, TvMinimalPlay, Users, LogOut, MessageSquare, GraduationCap } from "lucide-react"
 import { Newspaper } from 'lucide-react';
 export default function Sidebar() {
+
+    const logOutFunction = () => {
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+
+        window.location.href = "/"
+    }
 
     const NavItem = ({ href, icon: Icon, label }) => (
         <div className="group relative">
@@ -19,24 +26,32 @@ export default function Sidebar() {
     )
 
     return (
-            <aside className="flex w-16 flex-col items-center border-r bg-white py-4 dark:bg-slate-800 dark:border-slate-700">
-                <div className="flex flex-col items-center gap-4">
-                    <NavItem href="/" icon={Home} label="Home Page" />
-                    <NavItem href="/studentActivity" icon={Users} label="Student Activity " />
-                    <NavItem href="/matrial" icon={TvMinimalPlay} label="Matrail" />
-                    <NavItem href="/requirements" icon={Newspaper} label="Reqirements" />
+        <aside className="flex w-16 flex-col items-center border-r bg-white py-4 dark:bg-slate-800 dark:border-slate-700">
+            <div className="flex flex-col items-center gap-4">
+                <NavItem href="/" icon={Home} label="Home Page" />
+                <NavItem href="/studentActivity" icon={Users} label="Student Activity " />
+                <NavItem href="/matrial" icon={TvMinimalPlay} label="Matrail" />
+                <NavItem href="/requirements" icon={Newspaper} label="Reqirements" />
                 <NavItem href="/military" icon={Shield} label="Military" />
                 <NavItem href="/sendMessages" icon={MessageSquare} label="Send Messages" />
-                <NavItem href="/military" icon={LogOut} label="Log out" />
-
+                <NavItem href="/students" icon={Users} label="Students List" />
+                <div
+                    onClick={logOutFunction}
+                    className="flex h-12 w-12 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                    title="Log out"
+                >
+                    <LogOut className="h-6 w-6" />
                 </div>
-                <div className="mt-auto flex flex-col gap-4">
-                    <NavItem href="/profile" icon={User} label="Profile" />
-                    <NavItem href="/settings" icon={Settings} label="Settings" />
-                </div>
-            </aside>
 
-            
+            </div>
+            <div className="mt-auto flex flex-col gap-4">
+                <NavItem href="/profile" icon={User} label="Profile" />
+                <NavItem href="/results" icon={GraduationCap} label="النتائج" />
+                <NavItem href="/settings" icon={Settings} label="Settings" />
+            </div>
+        </aside>
+
+
     )
 }
 

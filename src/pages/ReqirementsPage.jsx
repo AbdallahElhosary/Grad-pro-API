@@ -1,210 +1,215 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { FileText, ChevronDown, ChevronUp } from 'lucide-react'
-import MainTitle from '../components/MainTitle'
+import { useState, useMemo } from "react"
+import { Search, FileText, ExternalLink, Grid, List } from "lucide-react"
+import GetAllDocuments from "../hook/documents/get-all-documents"
+import { Button } from "react-bootstrap"
 
-// Custom Components
-const CustomCard = ({ children, className, onClick }) => (
-  <div
-    className={`bg-white rounded-lg shadow-lg flex flex-col cursor-pointer ${className}`}
-    onClick={onClick}
-  >
-    {children}
-  </div>
-)
 
-const CustomCardHeader = ({ children }) => (
-  <div className="p-6 border-b border-gray-200">
-    {children}
-  </div>
-)
-
-const CustomCardTitle = ({ children }) => (
-  <h2 className="text-xl font-semibold flex items-center justify-between">
-    {children}
-  </h2>
-)
-
-const CustomCardContent = ({ children }) => (
-  <div className="p-6 flex-grow">
-    {children}
-  </div>
-)
-
-const CustomCardDescription = ({ children }) => (
-  <p className="text-sm text-gray-600">
-    {children}
-  </p>
-)
-
-const CustomButton = ({ children, onClick, className, variant = 'default' }) => {
-  const baseStyles = 'px-4 py-2 rounded-md font-medium transition-colors duration-200'
-  const variantStyles = {
-    default: 'bg-blue-600 text-white hover:bg-blue-700',
-    outline: 'border border-blue-600 text-blue-600 hover:bg-blue-50',
-  }
-  return (
-    <button
-      onClick={onClick}
-      className={`${baseStyles} ${variantStyles[variant]} ${className}`}
-    >
-      {children}
-    </button>
-  )
-}
-
-const CustomLink = ({ href, children, className, target, rel }) => (
-  <a
-    href={href}
-    target={target}
-    rel={rel}
-    className={`text-blue-600 hover:text-blue-700 transition-colors duration-200 ${className}`}
-  >
-    {children}
-  </a>
-)
-
-// Data
-const requirements = [
-  {
-    id: 1,
-    title: "Research Proposal",
-    description: "A detailed outline of your proposed research project, including objectives, methodology, and expected outcomes.",
-    paperLink: "https://example.com/research-proposal-template.pdf"
-  },
-  {
-    id: 2,
-    title: "Literature Review",
-    description: "A comprehensive review of existing literature related to your research topic, identifying gaps and areas for further study.",
-    paperLink: "https://example.com/literature-review-guide.pdf"
-  },
-  {
-    id: 3,
-    title: "Methodology Section",
-    description: "A detailed description of the research methods you plan to use, including data collection and analysis techniques.",
-    paperLink: "https://example.com/methodology-guidelines.pdf"
-  },
-  {
-    id: 4,
-    title: "Ethics Application",
-    description: "An application detailing the ethical considerations of your research and how you plan to address them.",
-    paperLink: "https://example.com/ethics-application-form.pdf"
-  },
-  {
-    id: 5,
-    title: "Progress Report",
-    description: "A regular update on the progress of your research, including achievements, challenges, and next steps.",
-    paperLink: "https://example.com/progress-report-template.pdf"
-  },
-  {
-    id: 6,
-    title: "Final Thesis",
-    description: "The complete presentation of your research, including introduction, literature review, methodology, results, discussion, and conclusion.",
-    paperLink: "https://example.com/thesis-structure-guide.pdf"
-  }
-]
 
 export default function RequirementsPage() {
-  const [expandedCard, setExpandedCard] = useState({ id: null, timestamp: 0 })
+  const [searchTerm, setSearchTerm] = useState("")
+  const [viewMode, setViewMode] = useState("grid")
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+  const [documentsData] = GetAllDocuments()
+  let user = localStorage.getItem("user")
+
+
+
+  const filteredDocuments = 
+    documentsData?.filter((doc) => {
+      const matchesSearch = doc?.nameOfDocument.toLowerCase().includes(searchTerm.toLowerCase())
+
+      return matchesSearch 
+    })
+  
+
+
+  const getDocumentType = (name) => {
+    if (name.includes("Certificate")) return "certificate"
+    if (name.includes("Statement")) return "statement"
+    if (name.includes("Request")) return "request"
+    if (name.includes("Letter")) return "letter"
+    if (name.includes("Form")) return "form"
+    return "document"
   }
 
-  const cardVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 12
-      }
-    },
-    hover: { 
-      scale: 1.02,
-      transition: { duration: 0.3 }
+  const getDocumentColor = (type) => {
+    const colors = {
+      certificate: "bg-emerald-50 border-emerald-200 text-emerald-800",
+      statement: "bg-blue-50 border-blue-200 text-blue-800",
+      request: "bg-orange-50 border-orange-200 text-orange-800",
+      letter: "bg-purple-50 border-purple-200 text-purple-800",
+      form: "bg-pink-50 border-pink-200 text-pink-800",
+      document: "bg-gray-50 border-gray-200 text-gray-800",
     }
+    return colors[type] || colors.document
   }
 
-  useEffect(() => {
-    if (expandedCard.id !== null) {
-      const timer = setTimeout(() => {
-        setExpandedCard(prev => ({ ...prev, id: null }))
-      }, 2000)
-      return () => clearTimeout(timer)
+  const getDocumentTypeLabel = (type) => {
+    const labels = {
+      certificate: "Certificate",
+      statement: "Statement",
+      request: "Request",
+      letter: "Letter",
+      form: "Form",
+      document: "Document",
     }
-  }, [expandedCard.id, expandedCard.timestamp])
+    return labels[type] || labels.document
+  }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      <MainTitle title="Academic Requirements" />
-      <main className="flex-grow container mx-auto px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="container mx-auto px-4 py-6">
+          <div className="text-center mb-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">University Documents</h1>
+            <p className="text-lg text-gray-600">
+              Comprehensive collection of available university documents and certificates
+            </p>
+          </div>
+
+          {/* Search and Filters */}
+          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+            {/* Search Bar */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Search documents..."
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Filters and View Toggle */}
+            <div className="flex gap-3 items-center">
+              {/* Language Filter */}
+              
+
+              {/* View Toggle */}
+              <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+                <button
+                  className={`p-2 ${viewMode === "grid" ? "bg-blue-500 text-white" : "bg-white text-gray-600"}`}
+                  onClick={() => setViewMode("grid")}
+                >
+                  <Grid className="h-5 w-5" />
+                </button>
+                <button
+                  className={`p-2 ${viewMode === "list" ? "bg-blue-500 text-white" : "bg-white text-gray-600"}`}
+                  onClick={() => setViewMode("list")}
+                >
+                  <List className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <Button className="flex justify-center items-center" href="/addDocument">
+            Add Document
+          </Button>
+
+          {/* Results Count */}
+          <div className="mt-4 text-sm text-gray-600">
+            Showing {filteredDocuments.length} of {documentsData.length} documents
+          </div>
+        </div>
+      </div>
+
+      {/* Documents Grid/List */}
+      <div className="container mx-auto px-4 py-8">
+        {filteredDocuments.length === 0 ? (
+          <div className="text-center py-12">
+            <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">No Documents Found</h3>
+            <p className="text-gray-500">No documents match your search criteria</p>
+          </div>
+        ) : (
+          <div
+            className={
+              viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" : "space-y-4"
+            }
+          >
+            {filteredDocuments.map((document) => {
+              const docType = getDocumentType(document.nameOfDocument)
+              const colorClass = getDocumentColor(docType)
+              const typeLabel = getDocumentTypeLabel(docType)
+
+              return viewMode === "grid" ? (
+                // Grid View Card
+                <div
+                  key={document.id}
+                  className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 overflow-hidden group"
+                >
+                  <div className={`h-2 ${colorClass.split(" ")[0]}`}></div>
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}
+                      >
+                        <FileText className="h-3 w-3 mr-1" />
+                        {typeLabel}
+                      </div>
+                    </div>
+
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 leading-relaxed">
+                      {document.nameOfDocument}
+                    </h3>
+
+                    <a
+                      href={document.linkOfDocument}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors group-hover:translate-x-1 transform duration-200"
+                    >
+                      View Document
+                      <ExternalLink className="h-4 w-4 ml-2" />
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                // List View Card
+                <div
+                  key={document.id}
+                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 p-6"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}
+                      >
+                        <FileText className="h-3 w-3 mr-1" />
+                        {typeLabel}
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">{document.nameOfDocument}</h3>
+                    </div>
+
+                    <a
+                      href={document.linkOfDocument}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors hover:translate-x-1 transform duration-200"
+                    >
+                      View Document
+                      <ExternalLink className="h-4 w-4 ml-2" />
+                    </a>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
         
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {requirements.map((req) => (
-            <motion.div
-              key={req.id}
-              variants={cardVariants}
-              whileHover="hover"
-            >
-              <CustomCard
-                onClick={() => {
-                  const now = Date.now()
-                  setExpandedCard(prev => 
-                    prev.id === req.id ? { id: null, timestamp: now } : { id: req.id, timestamp: now }
-                  )
-                }}
-              >
-                <CustomCardHeader>
-                  <CustomCardTitle>
-                    <span className="flex items-center">
-                      <FileText className="w-5 h-5 mr-2" />
-                      {req.title}
-                    </span>
-                    {expandedCard.id === req.id ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
-                  </CustomCardTitle>
-                </CustomCardHeader>
-                <CustomCardContent>
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ 
-                      opacity: expandedCard.id === req.id ? 1 : 0,
-                      height: expandedCard.id === req.id ? 'auto' : 0
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <CustomCardDescription className="mb-4">{req.description}</CustomCardDescription>
-                  </motion.div>
-                  <CustomLink href={req.paperLink} target="_blank" rel="noopener noreferrer">
-                    <CustomButton variant="outline" className="w-full mt-2">
-                      View Requirement Paper
-                    </CustomButton>
-                  </CustomLink>
-                </CustomCardContent>
-              </CustomCard>
-            </motion.div>
-          ))}
-        </motion.div>
-      </main>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-50 border-t mt-12">
+        <div className="container mx-auto px-4 py-8 text-center">
+          <p className="text-gray-600">Benha University - Electronic Documents System</p>
+        </div>
+      </footer>
     </div>
   )
 }

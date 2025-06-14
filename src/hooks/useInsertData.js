@@ -17,7 +17,9 @@ export const useInsertData = async (url, params) => {
     const config = {
         headers: {
             // 'Content-Type': 'application/problem+json; charset=utf-8',
+            headers: { 'Content-Type': 'application/json' },
             Authorization: `Bearer ${localStorage.getItem("token")}`
+
         }
     }
     const res = await baseUrl.post(url, params, config);

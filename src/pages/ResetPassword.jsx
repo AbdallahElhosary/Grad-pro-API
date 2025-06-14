@@ -6,31 +6,30 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import MainTitle from '../components/MainTitle';
 import MainButton from '../components/MainButton';
 import { ArrowLeft } from 'lucide-react';
+import { ToastContainer } from 'react-toastify';
+import ResetPasswordHook from '../hook/auth/reset-password-hook';
 
 export default function ResetPasswordPage() {
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [isSubmitted, setIsSubmitted] = useState(false)
-    const [error, setError] = useState('')
+
+    const [
+        email,
+        onChangeEmail,
+        code,
+        onChangecode,
+        password,
+        onChangePassword,
+        confirmPassword,
+        onChangeConfirmPassword,
+        onSubmit,
+
+    ] = ResetPasswordHook()
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword)
     const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword)
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        if (password !== confirmPassword) {
-            setError('Passwords do not match')
-            return
-        }
-        if (password.length < 8) {
-            setError('Password must be at least 8 characters long')
-            return
-        }
-        console.log('Password reset:', password)
-        setIsSubmitted(true)
-    }
+    
 
     const fadeIn = {
         hidden: { opacity: 0, y: -20 },
@@ -45,16 +44,39 @@ export default function ResetPasswordPage() {
                     <div className=" max-w-lg bg-white shadow-lg rounded-lg p-6 m-auto">
                         <h2 className="text-2xl font-bold text-center">Reset Password</h2>
                         <p className="text-center text-gray-600">Enter your new password</p>
-                        {!isSubmitted ? (
-                            <form onSubmit={handleSubmit} className="mt-4">
+                        <form onSubmit={onSubmit} className="mt-4">
                                 <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                                        <input
+                                            id="email"
+                                        type="email"
+                                        value={email}
+                                        onChange={onChangeEmail}
+                                        placeholder="m@example.com"
+                                            className="w-full border rounded-lg py-2 px-3 text-gray-700"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label htmlFor="code" className="block text-sm font-medium text-gray-700">Code</label>
+                                        <input
+                                            id="code"
+                                        type="text"
+                                        value={code}
+                                        onChange={onChangecode}
+                                            placeholder="123456"
+                                            className="w-full border rounded-lg py-2 px-3 text-gray-700"
+                                            required
+                                        />
+                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium">New Password</label>
                                         <div className="relative">
                                             <input
                                                 type={showPassword ? "text" : "password"}
                                                 value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
+                                                onChange={onChangePassword}
                                                 required
                                                 className="w-full p-2 border rounded"
                                             />
@@ -73,7 +95,7 @@ export default function ResetPasswordPage() {
                                             <input
                                                 type={showConfirmPassword ? "text" : "password"}
                                                 value={confirmPassword}
-                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                onChange={onChangeConfirmPassword}
                                                 required
                                                 className="w-full p-2 border rounded"
                                             />
@@ -86,16 +108,10 @@ export default function ResetPasswordPage() {
                                             </button>
                                         </div>
                                     </div>
-                                    {error && <p className="text-sm text-red-500">{error}</p>}
                                 </div>
                                 <MainButton title="Reset Password" />
                             </form>
-                        ) : (
-                            <div className="text-center mt-4">
-                                <p className="text-green-600">Password reset successfully!</p>
-                                <p>You can now log in with your new password.</p>
-                            </div>
-                        )}
+                        
                         <div className="flex justify-center items-center mt-4">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             <a href="/auth" className="flex items-center text-sm text-gray-600 hover:text-blue-600">Back to Login</a>
@@ -103,6 +119,8 @@ export default function ResetPasswordPage() {
                     </div>
                 </motion.div>
             </div>
+
+            <ToastContainer />
         </div>
     )
 }

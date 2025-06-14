@@ -57,29 +57,7 @@ export default function Component() {
                 </div>
             </section>
 
-            {/* Statistics Section */}
-            <section className="py-16 bg-blue-600 text-white">
-                <div className="container mx-auto px-4">
-                    <div className="grid md:grid-cols-4 gap-8 text-center">
-                        <div>
-                            <h4 className="text-4xl font-bold mb-2">2000+</h4>
-                            <p className="text-blue-100">طالب مسجل</p>
-                        </div>
-                        <div>
-                            <h4 className="text-4xl font-bold mb-2">50+</h4>
-                            <p className="text-blue-100">عضو هيئة تدريس</p>
-                        </div>
-                        <div>
-                            <h4 className="text-4xl font-bold mb-2">15+</h4>
-                            <p className="text-blue-100">سنة خبرة</p>
-                        </div>
-                        <div>
-                            <h4 className="text-4xl font-bold mb-2">95%</h4>
-                            <p className="text-blue-100">معدل رضا الطلاب</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            
 
             {/* Testimonials Section */}
             <section className="py-16 bg-white">

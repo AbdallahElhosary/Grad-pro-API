@@ -1,5 +1,5 @@
 import useDeleteData from "../../hooks/useDeleteData";
-import { useGetData } from "../../hooks/useGetData";
+import { useGetData, useGetDataToken } from "../../hooks/useGetData";
 import { useInsertData } from "../../hooks/useInsertData";
 import { ADD_MATRIAL, DELETE_MATRIAL, GET_ALL_MATRIAL, GET_ALL_MATRIAL_PAGENAT, GET_ERROR } from "../type";
 
@@ -7,7 +7,7 @@ import { ADD_MATRIAL, DELETE_MATRIAL, GET_ALL_MATRIAL, GET_ALL_MATRIAL_PAGENAT, 
 // Action to get all Matrial
 export const getAllMatrial = () => async (dispatch) => {
     try {
-        const response = await useGetData(`/api/Material/GetAllMaterialsWithCount`);
+        const response = await useGetDataToken(`/api/Material/GetAllMaterialsWithCount`);
         dispatch({
             type: GET_ALL_MATRIAL,
             payload: response
@@ -24,7 +24,7 @@ export const getAllMatrial = () => async (dispatch) => {
 // Action to get all matrial pagentaion
 export const getAllMatrialPagenation = (page, numPerPage) => async (dispatch) => {
     try {
-        const response = await useGetData(`/api/Material/GetAllMaterialsInPagnation/${page}/${numPerPage}`);
+        const response = await useGetDataToken(`/api/Material/GetAllMaterialsInPagnation/${page}/${numPerPage}`);
         dispatch({
             type: GET_ALL_MATRIAL_PAGENAT,
             payload: response

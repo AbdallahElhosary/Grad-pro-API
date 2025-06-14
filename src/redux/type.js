@@ -25,3 +25,24 @@ export const GET_ERROR = "GET_ERROR"
 export const LOGIN = "LOGIN"
 export const SIGN_UP = "SIGN_UP"
 export const LOGOUT = "LOGOUT"
+export const FORGET_PASSWORD = "FORGET_PASSWORD"
+export const RESET_PASSWORD = "RESET_PASSWORD"
+
+// Students
+export const GET_ALL_STUDENTS = "GET_ALL_STUDENTS";
+export const GET_ALL_STUDENTS_PAGENAT = "GET_ALL_STUDENTS_PAGENAT"
+export const ADD_STUDENT = "ADD_STUDENT"
+export const DELETE_STUDENT = "DELETE_STUDENT"
+export const GET_STUDENT_BY_ID = "GET_STUDENT_BY_ID"
+
+// Courses
+
+export const GET_AVAILABLE_COURSES = "GET_AVAILABLE_COURSES"
+export const GET_RECOM_COURSES = "GET_RECOM_COURSES"
+export const ENROLL_SUBJECTS = "ENROLL_SUBJECTS"
+
+// Docuemnts
+
+export const GET_ALL_DOCS = "GET_ALL_DOCS"
+export const ADD_DOC = "ADD_DOC"
+export const DELETE_DOC = "DELETE_DOC"

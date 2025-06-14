@@ -1,13 +1,13 @@
 import useDeleteData from "../../hooks/useDeleteData";
-import { useGetData } from "../../hooks/useGetData";
+import {  useGetDataToken } from "../../hooks/useGetData";
 import { useInsertData } from "../../hooks/useInsertData";
 import { useUpdateData } from "../../hooks/useUpdateData";
-import { ADD_COURSE, DELETE_COURSE, GET_ALL_COURSES, GET_ALL_COURSES_PAGENAT, GET_ERROR, UPDATE_COURSE } from "../type";
+import { ADD_COURSE, DELETE_COURSE, GET_ALL_COURSES, GET_ALL_COURSES_PAGENAT, GET_AVAILABLE_COURSES, GET_ERROR, GET_RECOM_COURSES, UPDATE_COURSE } from "../type";
 
 // Action to get all Courses
 export const getAllCourses = () => async (dispatch) => {
     try {
-        const response = await useGetData(`/api/Course/DashBoard/GetAllCourses`);
+        const response = await useGetDataToken(`/api/Course/DashBoard/GetAllCourses`);
         dispatch({
             type: GET_ALL_COURSES,
             payload: response
@@ -20,21 +20,21 @@ export const getAllCourses = () => async (dispatch) => {
     }
 }
 
-// // Action to get all courses with pagination
-// export const getAllCoursesPagenation = (page, numPerPage) => async (dispatch) => {
-//     try {
-//         const response = await useGetData(`/api/Course/DashBoard/GetAllCoursesInPagnation/${page}/${numPerPage}`);
-//         dispatch({
-//             type: GET_ALL_COURSES_PAGENAT,
-//             payload: response
-//         })
-//     } catch (e) {
-//         dispatch({
-//             type: GET_ERROR,
-//             payload: "Error" + e
-//         })
-//     }
-// }
+// Action to get all courses with pagination
+export const getAllCoursesPagenation = (page, numPerPage) => async (dispatch) => {
+    try {
+        const response = await useGetDataToken(`/api/Course/DashBoard/GetAllCoursesInPagnation/${page}/${numPerPage}`);
+        dispatch({
+            type: GET_ALL_COURSES_PAGENAT,
+            payload: response
+        })
+    } catch (e) {
+        dispatch({
+            type: GET_ALL_COURSES_PAGENAT,
+            payload: "Error" + e
+        })
+    }
+}
 
 
 // funciton to Add Course
@@ -85,3 +85,7 @@ export const updateCourse = (data) => async (dispatch) => {
         })
     }
 }
+
+
+
+

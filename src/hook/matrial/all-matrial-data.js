@@ -15,6 +15,8 @@ const AllMatrialPageHook = () => {
 
     const allMatrial = useSelector(state => state.allMatrail.getAllMatrial);
 
+    console.log(allMatrial)
+
     // Get All Matrials with limit
     useEffect(() => {
         dispatch(getAllMatrialPagenation(1, MatrialsPerPage));

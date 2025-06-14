@@ -13,15 +13,8 @@ export default function AuthPage() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
 
-  const [
-    email,
-    onChangeEmail,
-    password,
-    onChangePassword,
-    onLogin
-  ] = LoginSignUpHook();
+  const [email, password, loading, onChangeEmail, onChangePassword, onSubmit] = LoginSignUpHook();
 
-  console.log(email)
 
   const fadeIn = {
     hidden: { opacity: 0, y: -20 },
@@ -87,7 +80,7 @@ export default function AuthPage() {
                   variants={fadeIn}
                 >
                   {activeTab === 'login' ? (
-                    <form onSubmit={onLogin}>
+                    <form onSubmit={onSubmit}>
                       <div className="space-y-4">
                         {/* Email Field */}
                         <div className="space-y-2">

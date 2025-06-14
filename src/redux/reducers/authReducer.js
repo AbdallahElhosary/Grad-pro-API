@@ -1,4 +1,4 @@
-import { LOGIN, SIGN_UP } from '../type'
+import { LOGIN, SIGN_UP, RESET_PASSWORD, FORGET_PASSWORD } from '../type'
 
 const inital = {
     
@@ -16,7 +16,19 @@ const authReducer = (state = inital, action) => {
                 ...state,
                 signup: action.payload,
                 loading: false,
-                }
+            }
+        case FORGET_PASSWORD:
+            return {
+                ...state,
+                forgetPassword: action.payload,
+                loading: false,
+            }
+        case RESET_PASSWORD:
+            return {
+                ...state,
+                resetPassword: action.payload,
+                loading: false,
+                        }
         default:
             return state;
     }

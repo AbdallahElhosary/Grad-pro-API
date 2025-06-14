@@ -5,23 +5,35 @@ import MainTitle from '../components/MainTitle';
 import AllDepartmentsPageHook from '../hook/department/get-all-departments';
 import AddCourseHook from '../hook/course/add-new-course';
 import { ToastContainer } from 'react-toastify';
+import Multiselect from 'multiselect-react-dropdown';
 
 
 export default function AddCourseForm() {
 
-  const [courseName, onChangeName, courseCode, onChangeCode, coursePreRequest, onChangePreRequest
+  const [courses,courseName, onChangeName, courseCode, onChangeCode, coursePreRequest, onChangePreRequest
     , courseHours, onChangeHours
     , courseSemesters, onChangeSemesters
     , courseDepartments, onChangeDepartments
-    , mandatoryCourse, onChangeMandatoryCourse, onAddCourse] = AddCourseHook()
+    , mandatoryCourse, onChangeMandatoryCourse, onAddCourse,  onSelectPreRequest, onSelectSemester, onSelectDepartments] = AddCourseHook()
   
   
 
   const [departments] = AllDepartmentsPageHook();
 
-  console.log('====================================');
-  console.log(departments);
-  console.log('====================================');
+
+  let coursesCodes = []
+  if (courses) {
+    coursesCodes = courses.map(c => c.code)
+  }
+  
+
+  let Arr = [
+    'Option 1',
+    'Option 2',
+    'Option 3',
+    'Option 4',
+    'Option 5'
+  ]
 
 
 
@@ -77,80 +89,58 @@ export default function AddCourseForm() {
               {/* {error && <p className="text-red-500 text-sm mt-1">{error}</p>} */}
             </div>
 
-            <div className="space-y-2">
-              <FormLabel>Semesters</FormLabel>
-              <div className="flex flex-wrap gap-2">
-                {Array.from({ length: 8 }, (_, i) => i + 1).map((semester) => (
-                  <motion.button
-                    key={semester}
-                    type="button"
-                    whileTap={{ scale: 0.95 }}
-                    onClick={onChangeSemesters}
-                    value={semester}
-                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors has-checked:bg-indigo-50 `}
-                  >
-                    Semester {semester}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
+            <Multiselect
+              className="mt-2"
+              placeholder="Pre-Required Courses"
+              options={courses}
+              displayValue="code"
+              onKeyPressFn={function noRefCheck() { }}
+              onRemove={function noRefCheck() { }}
+              onSearch={function noRefCheck() { }}
+              onSelect={onSelectPreRequest}
+              showArrow={true}
+              style={{ color: "red" }}
+            />
 
-            <div className="space-y-2">
-              <FormLabel>Prerequisites</FormLabel>
-              <FormSelect
-                onChange={onChangePreRequest}
-              >
-                <option value="">Select prerequisites</option>
-                {coursePreRequest.map((course) => (
-                  <option key={course.id} value={course.id}>
-                    {course.code} - {course.name}
-                  </option>
-                ))}
-              </FormSelect>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {coursePreRequest.map((id) => {
-                  const course = coursePreRequest.find(c => c.id === id);
-                  return course ? (
-                    <motion.div
-                      key={id}
-                      className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-500 text-white"
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {course.code}
-                      <button
-                        type="button"
-                        onClick={onChangePreRequest}
-                        className="ml-2 focus:outline-none"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </motion.div>
-                  ) : null;
-                })}
-              </div>
-            </div>
+            <Multiselect
+              className="mt-2"
+              placeholder="Semesters"
+              options={[
+                { nameOfSemester: "Semester 1" },
+                { nameOfSemester: "Semester 2" },
+                { nameOfSemester: "Semester 3" },
+                { nameOfSemester: "Semester 4" },
+                { nameOfSemester: "Semester 5" },
+                { nameOfSemester: "Semester 6" },
+                { nameOfSemester: "Semester 7" },
+                { nameOfSemester: "Semester 8" },
+              ]}
+              displayValue="nameOfSemester"
+              onKeyPressFn={function noRefCheck() { }}
+              onRemove={function noRefCheck() { }}
+              onSearch={function noRefCheck() { }}
+              onSelect={onSelectSemester}
+              showArrow={true}
+              style={{ color: "red" }}
+            />
 
-            <div className="space-y-2">
-              <FormLabel>Departments</FormLabel>
-              <div className="flex flex-wrap gap-2">
-                {departments?.map((dept , index) => (
-                  <motion.button
-                    key={index}
-                    type="button"
-                    whileTap={{ scale: 0.95 }}
-                    onClick={onChangeDepartments}
-                    value={dept.nameOfDepartment}
-                    className={`inline-flex items-center px-3 py-1 rounded-md text-sm font-medium transition-colors ${courseDepartments.includes(dept.nameOfDepartment)
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                      }`}
-                  >
-                      {dept.nameOfDepartment }
 
-                  </motion.button>
-                ))}
-              </div>
-            </div>
+            <Multiselect
+              className="mt-2"
+              placeholder="Departments"
+              options={departments}
+              displayValue="nameOfDepartment"
+              onKeyPressFn={function noRefCheck() { }}
+              onRemove={function noRefCheck() { }}
+              onSearch={function noRefCheck() { }}
+              onSelect={onSelectDepartments}
+              showArrow={true}
+              style={{ color: "red" }}
+            />
+
+            
+
+            
 
             <div className="flex items-center space-x-2">
               <FormCheck

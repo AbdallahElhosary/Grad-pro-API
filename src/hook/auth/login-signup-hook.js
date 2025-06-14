@@ -1,75 +1,69 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react";
+import { useState, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { loginAction } from "../../redux/actions/authAction";
 import notify from "../useNotify";
-import { addAdmin } from "../../redux/actions/adminAction";
-
 const LoginSignUpHook = () => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
-    // The States
+
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(true);
+    const [isPress, setIsPress] = useState();
 
-
-    // Change handlers
 
     const onChangeEmail = (e) => {
         setEmail(e.target.value);
-    };
+    }
     const onChangePassword = (e) => {
         setPassword(e.target.value);
-    };
-
-
-
-
-    const onLogin = async (e) => {
-        e.preventDefault();
-        if (email === "" || password === "") {
-            notify("Please Fill The Form", "warn")
-            return;
-        }
-        setLoading(true)
-
-        await dispatch(addAdmin({
-            "email": email,
-            "password": password
-        }))
-        setLoading(false)
-
     }
 
-    const res = useSelector((state) => state.auth?.login);
+    const loginRes = useSelector((state) => state.auth.login);
 
-    console.log(res)
+    console.log(loginRes?.data)
 
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        setIsPress(true)
+        setLoading(true)
+        await dispatch(loginAction({
+            email,
+            password
+        }))
+        setLoading(false)
+        setIsPress(false)
+    }
 
     useEffect(() => {
         if (loading === false) {
-            if (res) {
-                if (res.status === 200) {
-                    notify("Admin Added Successfully", "success");
+            if (loginRes) {
+                if (loginRes.data.token) {
+                    localStorage.setItem("token", loginRes.data.token)
+                    localStorage.setItem("user", JSON.stringify(loginRes.data))
+                    notify("Log In Successfully", "success");
                     setTimeout(() => {
-                        navigate('/matrial')
-                    }, 1000)
+                        window.location.href = "/"
+                    }, 2000);
                 } else {
-                    notify("There is an error , please try again", "error");
+                    localStorage.removeItem("token")
+                    localStorage.removeItem("user")
+                }
+                if (loginRes.data.message === "Incorrect email or password") {
+                    localStorage.removeItem("token")
+                    localStorage.removeItem("user")
+                    notify("Email Or Password Is Wrong", "error");
                 }
             }
         }
+    }
+        , [loading])
 
-    }, [loading])
 
-    return [
-        email,
-        onChangeEmail,
-        password,
-        onChangePassword,
-        onLogin
-    ]
+
+    return [email, password, loading, onChangeEmail, onChangePassword, onSubmit]
 
 }
 
