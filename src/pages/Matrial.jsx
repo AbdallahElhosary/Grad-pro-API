@@ -52,8 +52,8 @@ export default function MatrialPage() {
                                 name={subj.name}
                                 description="Master the principles of effective web design"
                                 instructor={subj.instructor}
-                                youtubeLink={subj.youtubeLink && subj.youtubeLink}
-                                driveLink={subj.driveLink && subj.driveLink}
+                                youtube={subj.youtubeLink && subj.youtubeLink}
+                                drive={subj.driveLink && subj.driveLink}
                             />
                         ))}
                     </motion.div>

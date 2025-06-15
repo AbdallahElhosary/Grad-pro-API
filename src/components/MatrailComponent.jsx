@@ -8,15 +8,6 @@ import { Book, User, Youtube, FileText } from 'lucide-react'
 
 const MatrailComponent = ({ id, name, description, instructor, youtube, drive }) => {
 
-    const [hoveredCourse, setHoveredCourse] = useState(null)
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 }
-        }
-    }
 
     const cardVariants = {
         hidden: { y: 20, opacity: 0 },
@@ -42,8 +33,6 @@ const MatrailComponent = ({ id, name, description, instructor, youtube, drive })
         >
             <div
                 className="h-full flex flex-col justify-between bg-white rounded-xl shadow-lg p-6 border border-gray-100"
-                onMouseEnter={() => setHoveredCourse(id)}
-                onMouseLeave={() => setHoveredCourse(null)}
             >
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
