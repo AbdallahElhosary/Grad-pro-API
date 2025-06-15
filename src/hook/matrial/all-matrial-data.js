@@ -5,7 +5,7 @@ import { getAllMatrial, getAllMatrialPagenation } from '../../redux/actions/matr
 const AllMatrialPageHook = () => {
     const dispatch = useDispatch();
 
-    const MatrialsPerPage = 5
+    const MatrialsPerPage = 10
 
     
     // Get All Matrials with limit
@@ -13,7 +13,7 @@ const AllMatrialPageHook = () => {
         dispatch(getAllMatrial());
     }, [])
 
-    const allMatrial = useSelector(state => state);
+    const allMatrial = useSelector(state => state.allMatrail.getAllMatrial);
 
     console.log(allMatrial)
 
