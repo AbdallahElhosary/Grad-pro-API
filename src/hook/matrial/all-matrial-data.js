@@ -13,7 +13,7 @@ const AllMatrialPageHook = () => {
         dispatch(getAllMatrial());
     }, [])
 
-    const allMatrial = useSelector(state => state.allMatrail.getAllMatrial);
+    const allMatrial = useSelector(state => state);
 
     console.log(allMatrial)
 
