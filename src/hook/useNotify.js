@@ -3,12 +3,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const notify = (text, type) => {
     if (type === "error") {
-        toast.error(text, { position: "top-left" })
+        toast.error(text, { position: "top-center" })
     } else if (type === "success") {
-        toast.success(text, { position: "top-left" })
+        toast.success(text, { position: "top-center" })
     }
     else {
-        toast.warn(text, { position: "top-left" })
+        toast.warn(text, { position: "top-center" })
     }
 
 };

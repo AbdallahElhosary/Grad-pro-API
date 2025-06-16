@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import { Routes, Route } from "react-router";
@@ -29,16 +28,14 @@ import ProtectedRouteHook from "./hook/auth/protected-route-hook.js";
 import ProtectedRoute from "./components/utils/ProtectedRoute.jsx";
 import AddStudent from "./pages/AddStudent.jsx";
 import AddDocument from "./pages/AddDocument.jsx";
-
-
-
+import AllStudentsResults from "./pages/AllStudentsResults.jsx";
+import UploadResults from "./pages/UploadResults.jsx";
 
 
 
 export default function App() {
   const [userData, isUser, isAdmin] = ProtectedRouteHook();
 
-  console.log(userData)
 
   return (
     <div className="App font-sans flex min-h-screen bg-slate-50 dark:bg-slate-900">
@@ -52,24 +49,14 @@ export default function App() {
             <HeaderTitle name={userData?.name} />
             <Routes>
 
-              <Route path="/payment" element={<PaymentPage />} />
-              <Route path="/military" element={<MilitaryEducationPage />} />
-              <Route path="/adminManagement" element={<AdminManagementPage />} />
-              <Route path="/enterCode" element={<EnterCodePage />} />
-              <Route path="/requirements" element={<RequirementsPage />} />
-              <Route path="/matrial" element={<MatrialPage />} />
-
-              
-
               {/* Protected */}
 
-
-
               <Route element={<ProtectedRoute auth={isAdmin || isUser} />}>
-
+                <Route path="/requirements" element={<RequirementsPage />} />
                 <Route path="/" element={<HomePage />} />
-                <Route path="/enrollSubjects" element={<EnrollSubjects />} />
                 <Route path="/studentActivity" element={<StudentActivitiesPage />} />
+                <Route path="/military" element={<MilitaryEducationPage />} />
+                <Route path="/matrial" element={<MatrialPage />} />
 
               </Route>
 
@@ -84,26 +71,30 @@ export default function App() {
                 <Route path="/students" element={<StudentsPage />} />
                 <Route path="/addstudent" element={<AddStudent />} />
                 <Route path="/addDocument" element={<AddDocument />} />
-
-
+                <Route path="/allResults" element={<AllStudentsResults />} />
+                <Route path="/uploadResults" element={<UploadResults />} />
+                <Route path="/adminManagement" element={<AdminManagementPage />} />
               </Route>
 
 
               <Route element={<ProtectedRoute auth={isUser} />}>
+                <Route path="/payment" element={<PaymentPage />} />
                 <Route path="/profile" element={<StudentProfile />} />
                 <Route path="/studentProfile" element={<StudentProfile />} />
                 <Route path="/results" element={<StudentResults />} />
-
+                <Route path="/enrollSubjects" element={<EnrollSubjects />} />
               </Route>
 
               {/* PROTECTED */}
 
                 <Route element={<ProtectedRoute auth={!isAdmin && !isUser} />}>
                   <Route path="/login" element={<Login />} />
+                <Route path="/" element={<HomePage />} />
+
                   <Route path="/register" element={<Register />} />
                   <Route path="/auth/forgetPassword" element={<ForgotPasswordPage />} />
-                  <Route path="/auth/resetPassword" element={<ResetPasswordPage />} />
-                  {/* <Route path="/studentActivity" element={<StudentActivitiesPage />} /> */}
+                <Route path="/auth/resetPassword" element={<ResetPasswordPage />} />
+                <Route path="/enterCode" element={<EnterCodePage />} />
                 </Route>
 
               <Route path="/loading" element={<LoadingPage />} />

@@ -25,6 +25,7 @@ const GetAvailableRecomCoursesHook = () => {
     
     const allAvalibleCourses = useSelector((state) => state.students.getAvailableCourses)
     const allRecomCourses = useSelector((state) => state.students.getRecomCourses)
+    console.log(allAvalibleCourses)
 
   
     const allCourseCodes = selectedSubjects.map(course => course.code);
@@ -52,8 +53,8 @@ const GetAvailableRecomCoursesHook = () => {
     }
 
     const res = useSelector(state => state.students.enrollSubjects);
-
     console.log(res)
+
 
     
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { Search, FileText, ExternalLink, Grid, List } from "lucide-react"
 import GetAllDocuments from "../hook/documents/get-all-documents"
 import { Button } from "react-bootstrap"
@@ -12,7 +12,8 @@ export default function RequirementsPage() {
   const [viewMode, setViewMode] = useState("grid")
 
   const [documentsData] = GetAllDocuments()
-  let user = localStorage.getItem("user")
+  let user = JSON.parse(localStorage.getItem("user"))
+  console.log(user)
 
 
 
@@ -106,9 +107,11 @@ export default function RequirementsPage() {
               </div>
             </div>
           </div>
-          <Button className="flex justify-center items-center" href="/addDocument">
-            Add Document
-          </Button>
+          {
+            user.role === 1 && <Button className="flex justify-center items-center" href="/addDocument">
+              Add Document
+            </Button>
+          }
 
           {/* Results Count */}
           <div className="mt-4 text-sm text-gray-600">

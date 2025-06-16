@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 
 import { motion } from 'framer-motion'
 import { Book, User, Youtube, FileText } from 'lucide-react'

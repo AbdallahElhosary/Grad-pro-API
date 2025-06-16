@@ -6,6 +6,7 @@ import adminReducer from "./adminReducer";
 import authReducer from "./authReducer";
 import studentsReducer from "./studentsReducer";
 import documentReducer from "./documentReducer";
+import resultReducer from "./resultReducer";
 
 export default combineReducers({
     allMatrail : matrialReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
     courses: courseReducer,
     admins: adminReducer,
     auth: authReducer,
-    students: studentsReducer
+    students: studentsReducer,
+    results: resultReducer
 })

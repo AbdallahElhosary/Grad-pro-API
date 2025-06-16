@@ -9,7 +9,7 @@ const HeaderTitle = ({ name }) => {
                 <h1 className="text-2xl font-bold">Student Guide</h1>
                 <div className='flex gap-2 justify-center items-center'>
                     <span className='text-xl'>{name ? name : "Login"}</span>
-                    <a href="/login" className="rounded-full text-white bg-blue-700 p-2 hover:bg-blue-800">
+                    <a href="/studentProfile" className="rounded-full text-white bg-blue-700 p-2 hover:bg-blue-800">
                         <IoPersonCircle className="h-6 w-6" />
                     </a>
                 </div>

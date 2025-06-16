@@ -46,3 +46,8 @@ export const ENROLL_SUBJECTS = "ENROLL_SUBJECTS"
 export const GET_ALL_DOCS = "GET_ALL_DOCS"
 export const ADD_DOC = "ADD_DOC"
 export const DELETE_DOC = "DELETE_DOC"
+
+// REsult 
+export const GET_SPECIFIC_RESULT = "GET_SPECIFIC_RESULT"
+export const GET_ALL_RESULTS = "GET_ALL_RESULTS"
+export const UPDATE_RESULTS = "UPDATE_RESULTS"

@@ -5,23 +5,21 @@ import { Button, Card, Alert } from "react-bootstrap"
 import { PlusCircle, Trash2, AlertCircle } from "lucide-react"
 import MainTitle from "../components/MainTitle"
 import GetAvailableRecomCoursesHook from "../hook/course/get-available-recom-courses-hook"
-import { ToastContainer } from "react-toastify"
 
 export default function EnrollSubjects() {
+    const [selectedSubjects, setSelectedSubjects] = useState([])
     const [totalHours, setTotalHours] = useState(0)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
 
-    const [allAvalibleCourses, allRecomCourses, onEnroll, selectedSubjects, setSelectedSubjects] = GetAvailableRecomCoursesHook()
-    console.log(selectedSubjects)
+
+    const [allAvalibleCourses, allRecomCourses, onEnroll] = GetAvailableRecomCoursesHook()
 
     useEffect(() => {
         const newTotalHours = selectedSubjects.reduce((sum, subject) => sum + subject.hoursOfCourse, 0)
         setTotalHours(newTotalHours)
         setError(
-            newTotalHours > allAvalibleCourses?.maxHours
-                ? `You can't exceed ${allAvalibleCourses?.maxHours} credit hours`
-                : null,
+            newTotalHours > allAvalibleCourses?.maxHours ? `لا يمكن تجاوز ${allAvalibleCourses?.maxHours} ساعة معتمدة` : null,
         )
     }, [selectedSubjects, allAvalibleCourses?.maxHours])
 
@@ -31,20 +29,24 @@ export default function EnrollSubjects() {
             if (totalHours + subjectToAdd.hoursOfCourse <= allAvalibleCourses?.maxHours) {
                 setSelectedSubjects([...selectedSubjects, subjectToAdd])
             } else {
-                setError(`Adding this subject will exceed the limit of ${allAvalibleCourses?.maxHours} credit hours`)
+                setError(`إضافة هذه المادة سيتجاوز الحد الأقصى ${allAvalibleCourses?.maxHours} ساعة`)
             }
         }
     }
 
     const handleEnroll = async () => {
-        
+        if (selectedSubjects.length === 0) {
+            setError("الرجاء اختيار مادة واحدة على الأقل")
+            return
+        }
+        setLoading(true)
         try {
             const courseIds = selectedSubjects.map((subject) => subject.code)
             await onEnroll(courseIds)
             setSelectedSubjects([])
             setError(null)
         } catch (err) {
-            setError("An error occurred during enrollment. Please try again.")
+            setError("حدث خطأ أثناء التسجيل. الرجاء المحاولة مرة أخرى.")
         }
         setLoading(false)
     }
@@ -60,14 +62,14 @@ export default function EnrollSubjects() {
                 <div className="mt-8">
                     <Card>
                         <Card.Body>
-                            <Card.Title>Available Courses</Card.Title>
-                            <Card.Text>Available Hours: {allAvalibleCourses?.maxHours} Hours</Card.Text>
-                            {allAvalibleCourses?.allAvaliableCourses?.length > 0 ? (
+                            <Card.Title>available courses</Card.Title>
+                            <Card.Text> available hours : {allAvalibleCourses?.maxHours} Hours</Card.Text>
+                            {allAvalibleCourses?.allAvaliableCourses.length > 0 ? (
                                 <ul className="list-group">
-                                    {allAvalibleCourses.allAvaliableCourses.map((subject) => (
+                                    {allAvalibleCourses?.allAvaliableCourses.map((subject) => (
                                         <li key={subject.code} className="list-group-item d-flex justify-content-between">
                                             <span>
-                                                {subject.code} - {subject.nameOfCourse} ({subject.hoursOfCourse} hours)
+                                                {subject.code} - {subject.nameOfCourse} ({subject.hoursOfCourse} ساعات)
                                             </span>
                                             <Button
                                                 className="hover:bg-blue-500 d-flex justify-center items-center"
@@ -75,13 +77,14 @@ export default function EnrollSubjects() {
                                                 onClick={() => addSubject(subject.code)}
                                                 disabled={selectedSubjects.some((s) => s.code === subject.code)}
                                             >
-                                                <PlusCircle className="h-4 w-4 me-2" /> Add
+                                                Add
+                                                <PlusCircle className="h-4 w-4 mx-2" /> 
                                             </Button>
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p>No courses available for enrollment currently.</p>
+                                <p>There is No Courses</p>
                             )}
                         </Card.Body>
                     </Card>
@@ -90,14 +93,13 @@ export default function EnrollSubjects() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                     <Card>
                         <Card.Body>
-                            <Card.Title>Recommended Courses</Card.Title>
-                            <Card.Text>Based on your academic progress</Card.Text>
-                            {allRecomCourses?.allAvaliableCourses?.length > 0 ? (
+                            <Card.Title>Recommedtion Courses</Card.Title>
+                            {allRecomCourses?.length > 0 ? (
                                 <ul className="list-group">
-                                    {allRecomCourses.allAvaliableCourses.map((subject) => (
+                                    {allRecomCourses?.map((subject) => (
                                         <li key={subject.code} className="list-group-item d-flex justify-content-between">
                                             <span>
-                                                {subject.code} - {subject.nameOfCourse} ({subject.hoursOfCourse} hours)
+                                                {subject.code} - {subject.nameOfCourse} ({subject.hoursOfCourse} ساعات)
                                             </span>
                                             <Button
                                                 className="hover:bg-blue-500 d-flex justify-center items-center"
@@ -105,22 +107,23 @@ export default function EnrollSubjects() {
                                                 onClick={() => addSubject(subject.code)}
                                                 disabled={selectedSubjects.some((s) => s.code === subject.code)}
                                             >
-                                                <PlusCircle className="h-4 w-4 me-2" /> Add
+                                                Add
+                                                <PlusCircle className="h-4 w-4 mx-2" /> 
                                             </Button>
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p>No recommended courses available currently.</p>
+                                <p>لا توجد توصيات متاحة حالياً.</p>
                             )}
                         </Card.Body>
                     </Card>
 
                     <Card>
                         <Card.Body>
-                            <Card.Title>Selected Courses</Card.Title>
+                            <Card.Title>المواد المختارة</Card.Title>
                             <Card.Text>
-                                Total Hours: {totalHours} / {allAvalibleCourses?.maxHours}
+                                إجمالي الساعات: {totalHours} / {allAvalibleCourses?.maxHours}
                             </Card.Text>
                             {error && (
                                 <Alert variant="danger" className="mb-4">
@@ -131,7 +134,7 @@ export default function EnrollSubjects() {
                                 {selectedSubjects.map((subject) => (
                                     <li key={subject.code} className="list-group-item d-flex justify-content-between">
                                         <span>
-                                            {subject.code} - {subject.nameOfCourse} ({subject.hoursOfCourse} hours)
+                                            {subject.code} - {subject.nameOfCourse} ({subject.hoursOfCourse} ساعات)
                                         </span>
                                         <Button variant="danger" size="sm" onClick={() => removeSubject(subject.code)}>
                                             <Trash2 className="h-4 w-4" />
@@ -141,16 +144,15 @@ export default function EnrollSubjects() {
                             </ul>
                             <Button
                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                                onClick={onEnroll}
+                                onClick={handleEnroll}
                                 disabled={loading || selectedSubjects.length === 0}
                             >
-                                {loading ? "Enrolling..." : "Enroll Now"}
+                                {loading ? "جاري التسجيل..." : "تسجيل المواد"}
                             </Button>
                         </Card.Body>
                     </Card>
                 </div>
             </main>
-            <ToastContainer />
         </div>
     )
 }
